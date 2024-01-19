@@ -31,8 +31,14 @@ class MainMate:
         self.connection.send(package)
 
     def recv_j(self):
-        data = self.connection.recv(2048)
-        return json.loads(data)
+        data = ""
+
+        while True:
+            try:
+                data += self.connection.recv(2048)
+                return json.loads(data)
+            except ValueError:
+                continue
 
     def cmd_loop(self):
         while True:
