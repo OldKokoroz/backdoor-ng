@@ -24,8 +24,14 @@ def send_j(pack):
 
 
 def recv_j():
-    data = connection.recv(2048)
-    return json.loads(data)
+    data = ""
+
+    while True:
+        try:
+            data += connection.recv(2048)
+            return json.loads(data)
+        except ValueError:
+            continue
 
 
 while True:
