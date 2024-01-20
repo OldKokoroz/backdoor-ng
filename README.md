@@ -1,9 +1,11 @@
 # Red-BackDoor
 
-Clone :
+## Install
 
     git clone https://github.com/OldKokoroz/Red-BackDoor.git 
 
+
+## Usage
 
  - main.py     --> Backdoor that is to download on the victim's computer
 
