@@ -53,7 +53,7 @@ class MainMate:
 
     def cmd_loop(self):
         while True:
-            cmd_inp = input(f"{self.ipg}$ ").split(" ")
+            cmd_inp = input("backdoor-ng$ ").split(" ")
 
             try:
                 if cmd_inp[0] == "exit":
